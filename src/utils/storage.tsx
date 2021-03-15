@@ -18,10 +18,9 @@ export async function getConfigApp() {
 
 export async function getData(attribute:string) {
   try {
-    const value = await AsyncStorage.getItem('@config');
+    const value = await AsyncStorage.getItem(attribute);
     if (value !== null) {
-      let data = JSON.parse(value);
-      return data[attribute] || null;
+      return value;
     }
     return null;
   } catch (error) {
@@ -31,10 +30,7 @@ export async function getData(attribute:string) {
 
 export async function storeData (value:string, attribute:string) {
   try {
-    const storage = await AsyncStorage.getItem('@config');
-    let data = storage ? JSON.parse(storage) : configInit;
-    data[attribute] = value;
-    await AsyncStorage.setItem('@config', JSON.stringify(data));
+    await AsyncStorage.setItem(attribute, value);
   } catch (error) {
     console.log('Error', error);
   }

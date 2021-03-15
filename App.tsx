@@ -3,7 +3,8 @@ import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./src/utils/graphQL";
-import { ClientProvider } from "./src/context/client.context";
+import { mapping, light as lightTheme } from "@eva-design/eva";
+import { ApplicationProvider } from "@ui-kitten/components";
 import useCachedResources from "./src/hooks/useCachedResources";
 import useColorScheme from "./src/hooks/useColorScheme";
 import Navigation from "./src/navigation";
@@ -16,14 +17,14 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <ClientProvider>
-          <ApolloProvider client={client}>
+      <ApolloProvider client={client}>
+        <ApplicationProvider mapping={mapping} theme={lightTheme}>
+          <SafeAreaProvider>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />
-          </ApolloProvider>
-        </ClientProvider>
-      </SafeAreaProvider>
+          </SafeAreaProvider>
+        </ApplicationProvider>
+      </ApolloProvider>
     );
   }
 }

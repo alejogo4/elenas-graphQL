@@ -1,6 +1,26 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import {getData} from './storage';
+import { setContext } from '@apollo/client/link/context';
+
+const httpLink = createHttpLink({
+  uri: 'https://onboarding-redesign.dev.elenas.la/gql/',
+});
+
+const authLink = setContext(async(_, { headers }) => {
+
+  const token = await getData("token");
+  console.log("token saved", token);
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Token ${token}` : "",
+    }
+  }
+});
 
 export const client = new ApolloClient({
-    uri: 'https://onboarding-redesign.dev.elenas.la/gql/',
-    cache: new InMemoryCache()
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
 });
+
