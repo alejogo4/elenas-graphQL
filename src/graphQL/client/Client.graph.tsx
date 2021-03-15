@@ -25,19 +25,17 @@ export const LIST = gql`
 `;
 
 export const CREATE = gql`
-mutation CreateClientMutation($firstname: String!, $lastname: String!, $nickname: String!, $email: String!, $password: String!) {
-  createClient($firstname: String!, $lastname: String!, $nickname: String!, $email: String!, $password: String!) {
-    ... on Client {
-      id
-      registerDate
-      firstName
-      lastName
-      cedula
-      address
-      city
+  mutation($cellphone: String!, $password: String!) {
+    login(cellphone: $cellphone, password: $password) {
+      ... on AuthInfo {
+        token
+      }
+
+      ... on ValidationErrors {
+        message
+      }
     }
   }
-}
 `;
 
 export const EDIT = gql`

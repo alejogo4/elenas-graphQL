@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Input, Button } from "@ui-kitten/components";
-import {useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { LOGIN } from "./../../graphQL/Auth/Auth.graph";
-import {storeData, getData} from './../../utils/storage';
+import { storeData, getData } from "./../../utils/storage";
 
-export default function LoginScreen() {
+export default function LoginScreen(props:any) {
   const [cellphone, setCellphone] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,22 +15,23 @@ export default function LoginScreen() {
       password: "nueva123" || password,
     },
     onCompleted: async ({ login }) => {
-      await storeData(login.token , "token");
-      const token = await getData('token');
+      await storeData(login.token, "token");
+      props.navigation.navigate("Root");
     },
-    onError:(e)=>{
+    onError: (e) => {
       console.log(e);
-    }
+    },
   });
 
-  const loginForm = ()=>{
+  const loginForm = () => {
     login();
-  }
+  };
 
   return (
     <View style={styles.container}>
       <Input
         placeholder="Celular"
+        style={styles.spaces}
         value={cellphone}
         onChangeText={(nextValue) => {
           setCellphone(nextValue);
@@ -42,13 +40,16 @@ export default function LoginScreen() {
 
       <Input
         placeholder="Contraseña"
+        style={styles.spaces}
         value={password}
         onChangeText={(nextValue) => {
           setPassword(nextValue);
         }}
       />
 
-      <Button onPress={() => loginForm()}>Login</Button>
+      <Button style={styles.spaces} onPress={() => loginForm()}>
+        Login
+      </Button>
     </View>
   );
 }
@@ -58,5 +59,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  spaces: {
+    marginTop: 10,
   },
 });
