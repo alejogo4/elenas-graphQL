@@ -51,6 +51,7 @@ export const CREATE = gql`
 export const EDIT = gql`
   mutation UpdateClientMutation(
     $updateClientId: Int!
+    
     $updateClientInput: ClientInput!
   ) {
     updateClient(id: $updateClientId, input: $updateClientInput) {
