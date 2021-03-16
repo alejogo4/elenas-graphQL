@@ -1,9 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const configInit = {
-  token: null,
-};
-
 export async function getConfigApp() {
   try {
     const value = await AsyncStorage.getItem('@config');

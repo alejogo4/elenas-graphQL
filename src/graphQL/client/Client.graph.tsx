@@ -12,6 +12,8 @@ export const LIST = gql`
         address
         city
         cellphone
+        email
+        address
         state {
           id
           shortCode
@@ -35,6 +37,12 @@ export const CREATE = gql`
         cedula
         address
         city
+      }
+      ... on ValidationErrors {
+        message
+        errors {
+          message
+        }
       }
     }
   }

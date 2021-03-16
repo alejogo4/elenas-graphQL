@@ -1,37 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { StyleSheet, View, ToastAndroid } from "react-native";
 import { Input, Button } from "@ui-kitten/components";
 import { useMutation } from "@apollo/client";
-import { storeData, getData } from "../../utils/storage";
-import { CREATE } from "../../graphQL/client/Client.graph";
+import { CREATE, EDIT } from "../../graphQL/client/Client.graph";
 
-export default function TabOneScreen() {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    cedula: "",
-    email: "",
-    cellphone: "",
-    address: {
-      city: "",
-      streetAddress: "",
-      cityId: 1,
-      stateId: 1,
-    },
-  });
+const initialState = {
+  firstName: "",
+  lastName: "",
+  cedula: "",
+  email: "",
+  cellphone: "",
+  address: {
+    city: "",
+    streetAddress: "",
+    cityId: 1,
+    stateId: 1,
+  },
+};
 
-  const [register] = useMutation(CREATE, {
+export default function ClientEditScreen(props: any) {
+  const [edited, setEdited] = useState(false);
+  const [form, setForm] = useState(initialState);
+
+  useEffect(() => {
+    if (props.route?.params?.id) {
+      let params: any = { ...props.route?.params };
+      delete params["id"];
+      setForm({ ...form, ...params });
+      setEdited(true);
+    }
+  }, [props.route?.params]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => setForm(initialState);
+    }, [props.route?.params])
+  );
+
+  const [create] = useMutation(CREATE, {
     variables: { createClientInput: form },
     onCompleted: async (data) => {
-      console.log("hola", data)
+      ToastAndroid.show("Client Created Successfull!", ToastAndroid.SHORT);
     },
     onError: (e) => {
-      console.log(e);
+      ToastAndroid.show(`Error ${e}`, ToastAndroid.SHORT);
     },
   });
 
-  const loginForm = () => {
-    register();
+  const [edit] = useMutation(EDIT, {
+    variables: {
+      updateClientId: props.route?.params?.id,
+      updateClientInput: form,
+    },
+    onCompleted: async (data) => {
+      ToastAndroid.show("Client Edited Successfull!", ToastAndroid.SHORT);
+    },
+    onError: (e) => {
+      ToastAndroid.show(`Error ${e}`, ToastAndroid.SHORT);
+    },
+  });
+
+  const OnClientClient = () => {
+    edited ? edit() : create();
+    setForm(initialState);
   };
 
   return (
@@ -89,7 +121,9 @@ export default function TabOneScreen() {
         }}
       />
 
-      <Button onPress={() => loginForm()}>Login</Button>
+      <Button style={styles.button} onPress={() => OnClientClient()}>
+        {edited ? "Edit Client" : "Create Client"}
+      </Button>
     </View>
   );
 }
@@ -99,5 +133,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    marginTop: 25,
   },
 });
