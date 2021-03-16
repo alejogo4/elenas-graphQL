@@ -10,6 +10,7 @@ export default () => {
   return (
     <Stack.Navigator
       initialRouteName="Login"
+      headerMode="none"
     >
       <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>

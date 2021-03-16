@@ -28,7 +28,7 @@ export default function TabTwoScreen() {
       
       {
         data &&  <FlatList
-        style={{width:'100%', backgroundColor:'blue'}}
+        style={styles.list}
         data={data.clientsSearch.results}
         ItemSeparatorComponent={Divider}
         renderItem={renderItem}
@@ -44,9 +44,11 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   content:{
-    paddingHorizontal:10
+    marginHorizontal:10,
+    marginTop: 40
   },
-  container: {
-    
-  },
+  list: {width:'100%'},
+  container:{
+
+  }
 });
