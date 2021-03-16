@@ -25,28 +25,32 @@ export const LIST = gql`
 `;
 
 export const CREATE = gql`
-  mutation($cellphone: String!, $password: String!) {
-    login(cellphone: $cellphone, password: $password) {
-      ... on AuthInfo {
-        token
-      }
-
-      ... on ValidationErrors {
-        message
+  mutation CreateClientMutation($createClientInput: ClientInput!) {
+    createClient(input: $createClientInput) {
+      ... on Client {
+        id
+        registerDate
+        firstName
+        lastName
+        cedula
+        address
+        city
       }
     }
   }
 `;
 
 export const EDIT = gql`
-  mutation($cellphone: String!, $password: String!) {
-    login(cellphone: $cellphone, password: $password) {
-      ... on AuthInfo {
-        token
-      }
-
+  mutation UpdateClientMutation(
+    $updateClientId: Int!
+    $updateClientInput: ClientInput!
+  ) {
+    updateClient(id: $updateClientId, input: $updateClientInput) {
       ... on ValidationErrors {
         message
+        errors {
+          message
+        }
       }
     }
   }

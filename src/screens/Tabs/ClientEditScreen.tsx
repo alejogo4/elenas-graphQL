@@ -1,50 +1,91 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Input, Button } from "@ui-kitten/components";
-import {useMutation } from "@apollo/client";
-import { LOGIN } from "../../graphQL/Auth/Auth.graph";
-import {storeData, getData} from '../../utils/storage';
+import { useMutation } from "@apollo/client";
+import { storeData, getData } from "../../utils/storage";
+import { CREATE } from "../../graphQL/client/Client.graph";
 
 export default function TabOneScreen() {
-  const [cellphone, setCellphone] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [login] = useMutation(LOGIN, {
-    variables: {
-      cellphone: "+573057199995" || cellphone,
-      password: "nueva123" || password,
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    cedula: "",
+    email: "",
+    cellphone: "",
+    address: {
+      city: "",
+      streetAddress: "",
+      cityId: 1,
+      stateId: 1,
     },
-    onCompleted: async ({ login }) => {
-      await storeData(login.token , "token");
-      const token = await getData('token');
-    },
-    onError:(e)=>{
-      console.log(e);
-    }
   });
 
-  const loginForm = ()=>{
-    login();
-  }
+  const [register] = useMutation(CREATE, {
+    variables: { createClientInput: form },
+    onCompleted: async (data) => {
+      console.log("hola", data)
+    },
+    onError: (e) => {
+      console.log(e);
+    },
+  });
+
+  const loginForm = () => {
+    register();
+  };
 
   return (
     <View style={styles.container}>
       <Input
-        placeholder="Celular"
-        value={cellphone}
+        placeholder="Document"
+        value={form.cedula}
         onChangeText={(nextValue) => {
-          setCellphone(nextValue);
+          setForm({ ...form, cedula: nextValue });
         }}
       />
-
       <Input
-        placeholder="Contraseña"
-        value={password}
+        placeholder="First Name"
+        value={form.firstName}
         onChangeText={(nextValue) => {
-          setPassword(nextValue);
+          setForm({ ...form, firstName: nextValue });
+        }}
+      />
+      <Input
+        placeholder="Last Name"
+        value={form.lastName}
+        onChangeText={(nextValue) => {
+          setForm({ ...form, lastName: nextValue });
+        }}
+      />
+      <Input
+        placeholder="Mail"
+        value={form.email}
+        onChangeText={(nextValue) => {
+          setForm({ ...form, email: nextValue });
+        }}
+      />
+      <Input
+        placeholder="Cellphone"
+        value={form.cellphone}
+        onChangeText={(nextValue) => {
+          setForm({ ...form, cellphone: nextValue });
+        }}
+      />
+      <Input
+        placeholder="City"
+        value={form.address.city}
+        onChangeText={(nextValue) => {
+          setForm({ ...form, address: { ...form.address, city: nextValue } });
+        }}
+      />
+      <Input
+        placeholder="Street Address"
+        value={form.address.streetAddress}
+        onChangeText={(nextValue) => {
+          setForm({
+            ...form,
+            address: { ...form.address, streetAddress: nextValue },
+          });
         }}
       />
 
