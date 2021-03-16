@@ -61,7 +61,7 @@ export default function ClientEditScreen(props: any) {
     },
   });
 
-  const OnClientClient = () => {
+  const OnClickClient = () => {
     edited ? edit() : create();
     setForm(initialState);
   };
@@ -121,7 +121,7 @@ export default function ClientEditScreen(props: any) {
         }}
       />
 
-      <Button style={styles.button} onPress={() => OnClientClient()}>
+      <Button style={styles.button} onPress={() => OnClickClient()}>
         {edited ? "Edit Client" : "Create Client"}
       </Button>
     </View>
